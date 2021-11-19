@@ -46,17 +46,7 @@ def run(context):
             Yslider.slideValue = Y[i]
             Zslider.slideValue = Z[i]
             ui.messageBox(f'{X[i]},{Y[i]},{Z[i]}', 'New Coordinates')
-
-
-        # # origins of coordinates
-        # (Xorigin, _, _, _) = Xaxis.transform.getAsCoordinateSystem()
-        # (Yorigin, _, _, _) = Yaxis.transform.getAsCoordinateSystem()
-        # (Zorigin, _, _, _) = Zaxis.transform.getAsCoordinateSystem()
-
-
-        # ui.messageBox(str(Xorigin.asArray()), "X Axis Table origin")
-        # ui.messageBox(str(Yorigin.asArray()), "Y Axis Saddle origin")
-        # ui.messageBox(str(Zorigin.asArray()), "Z Axis Ram origin")   
+   
 
     except:
         if ui:
