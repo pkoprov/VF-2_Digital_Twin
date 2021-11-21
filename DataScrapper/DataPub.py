@@ -23,4 +23,4 @@ while True:
         print(f"Publishing {coordinates} to {topic}")
     except:
         print('Something went wrong')
-    time.sleep(0.1)
+    time.sleep(0.7)

@@ -16,7 +16,6 @@ def on_message(client, userdata, msg):
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected to MQTT Broker!")
-        mqtt_client.subscribe(topic + '/#')
     else:
         print(f"Failed to connect, return code {rc}", "Error\t")
 
@@ -33,4 +32,5 @@ def update_sliders(x):
 mqtt_client.connect(mqttBroker)
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
+mqtt_client.subscribe(topic + '/#')
 mqtt_client.loop_forever()

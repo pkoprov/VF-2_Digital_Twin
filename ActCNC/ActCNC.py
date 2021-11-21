@@ -3,14 +3,8 @@
 #Reference: https://help.autodesk.com/view/fusion360/ENU/?guid=GUID-6C0D8659-3294-4F3B-B2FC-ED120BAC2E27
 
 import adsk.core, adsk.fusion, adsk.cam, traceback
-from .Modules import paho
 import time
 import json
-
-mqttBroker = 'broker.hivemq.com'
-mqtt_client = paho.mqtt.client.Client('Fusion360')
-topic = 'FWH/CNC/Machine_coordinates'
-global x
 
     
 def run(context):
@@ -18,6 +12,16 @@ def run(context):
     try:
         app = adsk.core.Application.get()
         ui  = app.userInterface
+
+        try: 
+            from .Modules.paho.mqtt import client as mqtt
+            ui.messageBox("Import Success", "Success")
+        except:
+            ui.messageBox("Error")
+        
+        mqttBroker = 'broker.hivemq.com'
+        mqtt_client = mqtt.Client('Fusion360')
+        topic = 'FWH/CNC/Machine_coordinates'
         
         product = app.activeProduct
         design = adsk.fusion.Design.cast(product)
@@ -49,7 +53,6 @@ def run(context):
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
                 ui.messageBox("Connected to MQTT Broker!", "Connected!")
-                mqtt_client.subscribe(topic + '/#')
             else:
                 ui.messageBox(f"Failed to connect, return code {rc}", "Error\t")
 
@@ -59,13 +62,11 @@ def run(context):
             Yslider.slideValue = coordinates['Y']
             Zslider.slideValue = coordinates['Z']
 
-        try:
-            mqtt_client.connect(mqttBroker)
-            mqtt_client.on_connect = on_connect
-            mqtt_client.on_message = on_message
-            mqtt_client.loop_forever()
-        except:
-            ui.messageBox("Something is wrong", "Error")
+        mqtt_client.connect(mqttBroker)
+        mqtt_client.on_connect = on_connect
+        mqtt_client.on_message = on_message
+        mqtt_client.subscribe(topic + '/#')
+        mqtt_client.loop_forever()
             
     except:
         if ui:
