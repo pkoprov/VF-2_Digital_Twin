@@ -61,6 +61,7 @@ def run(context):
             Xslider.slideValue = coordinates['X']
             Yslider.slideValue = coordinates['Y']
             Zslider.slideValue = coordinates['Z']
+            ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
 
         mqtt_client.connect(mqttBroker)
         mqtt_client.on_connect = on_connect
