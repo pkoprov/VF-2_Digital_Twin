@@ -3,8 +3,16 @@
 #Reference: https://help.autodesk.com/view/fusion360/ENU/?guid=GUID-6C0D8659-3294-4F3B-B2FC-ED120BAC2E27
 
 import adsk.core, adsk.fusion, adsk.cam, traceback
-import Values
+from .Modules import paho
+import time
+import json
 
+mqttBroker = 'broker.hivemq.com'
+mqtt_client = paho.mqtt.client.Client('Fusion360')
+topic = 'FWH/CNC/Machine_coordinates'
+global x
+
+    
 def run(context):
     ui = None
     try:
@@ -33,21 +41,32 @@ def run(context):
         Yslider = adsk.fusion.SliderJointMotion.cast(Yaxis.asBuiltJoints.itemByName("Yslider").jointMotion)
         Zslider = adsk.fusion.SliderJointMotion.cast(Zaxis.asBuiltJoints.itemByName("Zslider").jointMotion)
 
+        def on_message(client, userdata, msg):
+            x  = msg.payload
+            update_sliders(x)
+
+
+        def on_connect(client, userdata, flags, rc):
+            if rc == 0:
+                ui.messageBox("Connected to MQTT Broker!", "Connected!")
+                mqtt_client.subscribe(topic + '/#')
+            else:
+                ui.messageBox(f"Failed to connect, return code {rc}", "Error\t")
+
+        def update_sliders(x):
+            coordinates = json.loads(x)
+            Xslider.slideValue = coordinates['X']
+            Yslider.slideValue = coordinates['Y']
+            Zslider.slideValue = coordinates['Z']
+
         try:
-            X = Values.X
-            Y = Values.Y
-            Z = Values.Z   
+            mqtt_client.connect(mqttBroker)
+            mqtt_client.on_connect = on_connect
+            mqtt_client.on_message = on_message
+            mqtt_client.loop_forever()
         except:
-            ui.messageBox("Something is Wrong", "Error\t") 
-
-        # move components in joints incrementally
-        for i in range(0, len(X)-1):
-            Xslider.slideValue = X[i]
-            Yslider.slideValue = Y[i]
-            Zslider.slideValue = Z[i]
-            ui.messageBox(f'{X[i]},{Y[i]},{Z[i]}', 'New Coordinates')
-   
-
+            ui.messageBox("Something is wrong", "Error")
+            
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
