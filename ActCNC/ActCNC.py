@@ -4,16 +4,13 @@
 
 from adsk import doEvents, terminate
 import adsk.core, adsk.fusion, adsk.cam, traceback
-import time
 import json
-import threading
-    
+
 def run(context):
     ui = None
     try:
         app = adsk.core.Application.get()
         ui  = app.userInterface
-
         try: 
             from .Modules.paho.mqtt import client as mqtt
             ui.messageBox("Import Success", "Success")
@@ -46,6 +43,7 @@ def run(context):
         Yslider = adsk.fusion.SliderJointMotion.cast(Yaxis.asBuiltJoints.itemByName("Yslider").jointMotion)
         Zslider = adsk.fusion.SliderJointMotion.cast(Zaxis.asBuiltJoints.itemByName("Zslider").jointMotion)
 
+
         def on_message(client, userdata, msg):
             x  = msg.payload
             update_sliders(x)
@@ -65,16 +63,15 @@ def run(context):
             adsk.doEvents()
             app.activeViewport.refresh()
             # ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
-        
+           
         try:
             mqtt_client.connect(mqttBroker)
             mqtt_client.on_connect = on_connect
             mqtt_client.on_message = on_message
             mqtt_client.subscribe(topic + '/#')
             mqtt_client.loop_forever()
-        except KeyboardInterrupt:
-            ui.messageBox("User ended script", "Goodbye")
-        
+        except KeyboardInterrupt: #ctrl + C exits script
+            ui.messageBox("User ended script", "Goodbye")        
         
             
     except:
