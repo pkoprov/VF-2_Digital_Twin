@@ -2,10 +2,11 @@
 # Description-Actuates the CNC Axes bassed on real time updates from the machine transfered over MQTT
 #Reference: https://help.autodesk.com/view/fusion360/ENU/?guid=GUID-6C0D8659-3294-4F3B-B2FC-ED120BAC2E27
 
+from adsk import doEvents, terminate
 import adsk.core, adsk.fusion, adsk.cam, traceback
 import time
 import json
-
+import threading
     
 def run(context):
     ui = None
@@ -61,13 +62,20 @@ def run(context):
             Xslider.slideValue = coordinates['X']
             Yslider.slideValue = coordinates['Y']
             Zslider.slideValue = coordinates['Z']
-            ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
-
-        mqtt_client.connect(mqttBroker)
-        mqtt_client.on_connect = on_connect
-        mqtt_client.on_message = on_message
-        mqtt_client.subscribe(topic + '/#')
-        mqtt_client.loop_forever()
+            adsk.doEvents()
+            app.activeViewport.refresh()
+            # ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
+        
+        try:
+            mqtt_client.connect(mqttBroker)
+            mqtt_client.on_connect = on_connect
+            mqtt_client.on_message = on_message
+            mqtt_client.subscribe(topic + '/#')
+            mqtt_client.loop_forever()
+        except KeyboardInterrupt:
+            ui.messageBox("User ended script", "Goodbye")
+        
+        
             
     except:
         if ui:
