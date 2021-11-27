@@ -1,0 +1,5 @@
+db = 'HaasDataCollection'
+user = 'postgres'
+password = 'fwh2200'
+host = '10.76.152.200 '
+port = '5432'
