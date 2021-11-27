@@ -13,7 +13,6 @@ def run(context):
         ui  = app.userInterface
         try: 
             from .Modules.paho.mqtt import client as mqtt
-            ui.messageBox("Import Success", "Success")
         except:
             ui.messageBox("Error")
         
