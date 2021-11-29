@@ -7,8 +7,8 @@ import config
 import psycopg2 as pg
 import numpy as np
 
-mqttBroker = '192.168.10.4'
-client1 = mqtt.Client('ashwin')
+mqttBroker = 'broker.hivemq.com'
+client1 = mqtt.Client('Hass')
 topic = 'FWH/CNC/Machine_coordinates'
 
 # Connect to DataBase
@@ -33,4 +33,4 @@ while True:
         print(f"Publishing {coordinates} to {topic}")
     except:
         print('Something went wrong')
-    time.sleep(0.5)
+    time.sleep(0.7)
