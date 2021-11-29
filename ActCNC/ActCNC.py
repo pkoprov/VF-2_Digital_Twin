@@ -44,8 +44,11 @@ def run(context):
 
 
         def on_message(client, userdata, msg):
-            x  = msg.payload
-            update_sliders(x)
+            if msg.payload:
+                x = msg.payload
+                update_sliders(x)
+            else:
+                ui.messageBox("Completed", 'End \t')
 
 
         def on_connect(client, userdata, flags, rc):
@@ -63,13 +66,13 @@ def run(context):
             app.activeViewport.refresh()
             # ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
            
-        try:
+        if not KeyboardInterrupt:
             mqtt_client.connect(mqttBroker)
             mqtt_client.on_connect = on_connect
             mqtt_client.on_message = on_message
             mqtt_client.subscribe(topic + '/#')
             mqtt_client.loop_forever()
-        except KeyboardInterrupt: #ctrl + C exits script
+        else:
             ui.messageBox("User ended script", "Goodbye")        
         
             

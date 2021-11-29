@@ -27,4 +27,4 @@ for i in range(len(x)):
         print(f"Publishing {coordinates} to {topic}")
     except:
         print('Something went wrong')
-    time.sleep(1)
+    time.sleep(0.5)
