@@ -3,7 +3,7 @@ import time
 import pandas as pd
 import json
 
-mqttBroker = 'broker.hivemq.com'
+mqttBroker = '192.168.10.4'
 mqtt_client = mqtt.Client('kms')
 topic = 'FWH/CNC/Machine_coordinates'
 

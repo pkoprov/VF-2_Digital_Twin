@@ -7,7 +7,7 @@ import config
 import psycopg2 as pg
 import numpy as np
 
-mqttBroker = 'broker.hivemq.com'
+mqttBroker = '192.168.10.4'
 client1 = mqtt.Client('ashwin')
 topic = 'FWH/CNC/Machine_coordinates'
 

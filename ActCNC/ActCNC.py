@@ -16,7 +16,7 @@ def run(context):
         except:
             ui.messageBox("Error")
         
-        mqttBroker = 'broker.hivemq.com'
+        mqttBroker = '192.168.10.4'
         mqtt_client = mqtt.Client('Fusion360')
         topic = 'FWH/CNC/Machine_coordinates'
         
