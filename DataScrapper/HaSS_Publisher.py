@@ -29,7 +29,7 @@ while True:
     client1.connect(mqttBroker)
     client1.loop_start()
     try:
-        client1.publish(topic, message, qos=1)
+        client1.publish(topic, message, qos=1, retain=True)
         print(f"Publishing {coordinates} to {topic}")
     except:
         print('Something went wrong')
