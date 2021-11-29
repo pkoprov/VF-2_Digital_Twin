@@ -16,7 +16,7 @@ conn = pg.connect(f"host = {config.host} port = {config.port} dbname={config.db}
                   f"password={config.password}")
 
 while True:
-    CMD = f'select * from "VF-2_1" order by "Year, month, day" desc, "Power-on Time (total)" desc limit 1'
+    CMD = f'select * from "VF-2_1" where "Power-on Time (total)" IS NOT NULL order by "Year, month, day" desc, "Power-on Time (total)" desc limit 1'
     df = pd.read_sql_query(CMD, conn)
     df.replace([None], np.nan, inplace=True)
     X = float(df['Present machine coordinate position X'][0])
@@ -33,4 +33,4 @@ while True:
         print(f"Publishing {coordinates} to {topic}")
     except:
         print('Something went wrong')
-    time.sleep(0.7)
+    time.sleep(0.5)
