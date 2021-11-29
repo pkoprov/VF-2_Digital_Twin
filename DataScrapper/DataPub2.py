@@ -13,9 +13,9 @@ x = data['x'].tolist()
 y = data['y'].tolist()
 z = data['z'].tolist()
 for i in range(len(x)):
-    X = x[i]
-    Y = y[i]
-    Z = z[i]
+    X = x[i] * 2.54
+    Y = y[i] * 2.54
+    Z = z[i] * 2.54
     coordinates = {'X': X,
                    'Y': Y,
                    'Z': Z}

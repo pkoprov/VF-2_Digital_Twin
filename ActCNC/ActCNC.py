@@ -66,13 +66,13 @@ def run(context):
             app.activeViewport.refresh()
             # ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
            
-        if not KeyboardInterrupt:
+        try:
             mqtt_client.connect(mqttBroker)
             mqtt_client.on_connect = on_connect
             mqtt_client.on_message = on_message
             mqtt_client.subscribe(topic + '/#')
             mqtt_client.loop_forever()
-        else:
+        except KeyboardInterrupt:
             ui.messageBox("User ended script", "Goodbye")        
         
             
