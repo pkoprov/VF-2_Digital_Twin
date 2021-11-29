@@ -44,7 +44,7 @@ def run(context):
 
 
         def on_message(client, userdata, msg):
-            if msg.payload:
+            if msg.payload is not None:
                 x = msg.payload
                 update_sliders(x)
             else:
