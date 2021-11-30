@@ -3,7 +3,7 @@ import time
 import pandas as pd
 import random
 import json
-from DataScrapper import config
+import config
 import psycopg2 as pg
 import numpy as np
 
@@ -41,4 +41,4 @@ while True:
         print(f"Publishing {coordinates} to {topic}")
     except:
         print('Something went wrong')
-    time.sleep(0.5)
+    time.sleep(0.1)
