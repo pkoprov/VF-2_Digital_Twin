@@ -5,6 +5,7 @@
 from adsk import doEvents, terminate
 import adsk.core, adsk.fusion, adsk.cam, traceback
 import json
+import time
 
 def run(context):
     ui = None
@@ -17,7 +18,7 @@ def run(context):
             ui.messageBox("Error")
         
         mqttBroker = 'broker.hivemq.com'
-        mqtt_client = mqtt.Client('Autodesk')
+        mqtt_client = mqtt.Client('MyCNC')
         topic = 'FWH/CNC/Machine_coordinates'
         
         product = app.activeProduct
@@ -44,11 +45,8 @@ def run(context):
 
 
         def on_message(client, userdata, msg):
-            if msg.payload is not None:
-                x = msg.payload
-                update_sliders(x)
-            else:
-                ui.messageBox("Completed", 'End \t')
+            x = msg.payload
+            update_sliders(x)
 
 
         def on_connect(client, userdata, flags, rc):
@@ -64,7 +62,7 @@ def run(context):
             Zslider.slideValue = coordinates['Z']
             adsk.doEvents()
             app.activeViewport.refresh()
-            # ui.messageBox(f"{coordinates['X']},{coordinates['Y']},{coordinates['Z']}", "New Coordinates")
+                
            
         try:
             mqtt_client.connect(mqttBroker)
