@@ -9,9 +9,9 @@ client1 = mqtt.Client('ashwin')
 topic = 'FWH/CNC/Machine_coordinates'
 
 data = pd.read_csv('Coordinates.csv')
-x = data['x'].tolist()
-y = data['y'].tolist()
-z = data['z'].tolist()
+x = data['X'].tolist()
+y = data['Y'].tolist()
+z = data['Z'].tolist()
 for i in range(len(x)):
     X = x[i] * 2.54
     Y = y[i] * 2.54

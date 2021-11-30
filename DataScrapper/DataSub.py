@@ -20,6 +20,10 @@ def on_connect(client, userdata, flags, rc):
         print(f"Failed to connect, return code {rc}", "Error\t")
 
 
+def on_disconnect(client, userdata, rc):
+    print("Unexpected disconnection.")
+
+
 def update_sliders(x):
     coordinates = json.loads(x)
     print(coordinates)
@@ -32,5 +36,6 @@ def update_sliders(x):
 mqtt_client.connect(mqttBroker)
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
-mqtt_client.subscribe(topic + '/#')
-mqtt_client.loop_forever()
+mqtt_client.on_disconnect = on_disconnect
+mqtt_client.subscribe(topic + '/#', qos=0)
+mqtt_client.loop_start()
