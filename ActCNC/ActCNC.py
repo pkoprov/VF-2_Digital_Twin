@@ -84,12 +84,23 @@ def run(context):
             mqtt_client.connect(mqttBroker)
             mqtt_client.on_connect = on_connect
             mqtt_client.on_message = on_message
-            mqtt_client.subscribe(topic + '/#')
-            mqtt_client.loop_forever()
-        except KeyboardInterrupt:
-            ui.messageBox("User ended script", "Goodbye")        
-        
-            
+            mqtt_client.subscribe(topic)
+            mqtt_client.subscribe(cmd)
+            mqtt_client.loop()
+        except:
+            ui.messageBox("Disconnected!", "MQTT Status")
+
+
+        try:
+            while carry_on:
+                mqtt_client.loop()
+                time.sleep(0.1)
+        except:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+            pass
+        finally:
+            # print("Disconnected!", "MQTT Status")
+            ui.messageBox("Disconnected!", "MQTT Status")
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
