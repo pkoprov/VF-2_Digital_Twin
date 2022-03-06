@@ -6,6 +6,10 @@ from adsk import doEvents, terminate
 import adsk.core, adsk.fusion, adsk.cam, traceback
 import json
 import time
+# import paho.mqtt.client as mqtt
+
+
+carry_on = True
 
 def run(context):
     ui = None
