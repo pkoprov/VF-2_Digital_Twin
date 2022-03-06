@@ -55,7 +55,8 @@ def run(context):
 
         mqttBroker = '192.168.10.4'
         mqtt_client = mqtt.Client('MyCNC')
-        topic = 'FWH/CNC/Machine_coordinates'
+        topic = 'spBv1.0/FWH2200/DDATA/VF-2_2_RPI/VF-2_2'
+        cmd = "DT"
         
         product = app.activeProduct
         design = adsk.fusion.Design.cast(product)
