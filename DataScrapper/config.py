@@ -1,5 +1,0 @@
-db = 'HaasDataCollection'
-user = 'postgres'
-password = 'fwh2200'
-host = 'localhost'
-port = '5432'
