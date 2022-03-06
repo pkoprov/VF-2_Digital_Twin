@@ -1,5 +1,5 @@
 # Author-Ashwin Ramachandran, Pavel Koprov
-# Description-Actuates the CNC Axes bassed on real time updates from the machine transfered over MQTT
+# Description-Actuates the CNC Axes based on real time updates from the machine transferred over MQTT
 #Reference: https://help.autodesk.com/view/fusion360/ENU/?guid=GUID-6C0D8659-3294-4F3B-B2FC-ED120BAC2E27
 
 from adsk import doEvents, terminate
@@ -12,6 +12,7 @@ import time
 carry_on = True
 
 def run(context):
+
     ui = None
     try:
         app = adsk.core.Application.get()
