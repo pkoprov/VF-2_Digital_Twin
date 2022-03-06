@@ -21,8 +21,39 @@ def run(context):
             from .Modules.paho.mqtt import client as mqtt
         except:
             ui.messageBox("Error")
-        
-        mqttBroker = 'broker.hivemq.com'
+
+
+        def on_message(client, userdata, msg):
+            # print(msg.payload)
+            global carry_on
+            if msg.topic == "DT":
+                if msg.payload.decode().lower() == "stop":
+                    carry_on = False
+            else:
+                msg = json.loads(msg.payload)
+                data = "Present machine coordinate position "
+                coord_list = "XYZ"
+                coord_keys = [data + coord for coord in coord_list]
+                coord_val = [float(value) for key, value in msg.items() if key in coord_keys]
+                update_sliders(coord_val)
+
+        def on_connect(client, userdata, flags, rc):
+            if rc == 0:
+                # print("Connected!", "MQTT Status")
+                ui.messageBox("Connected!", "MQTT Status")
+            else:
+                # print(f"Error\t\nFailed to connect, return code {rc}", "MQTT Status")
+                ui.messageBox(f"Error\t\nFailed to connect, return code {rc}", "MQTT Status")
+
+        def update_sliders(coordinates):
+            Xslider.slideValue = coordinates[0]*2.54
+            Yslider.slideValue = coordinates[1]*2.54
+            Zslider.slideValue = (coordinates[2]- 4.1481)*2.54-2.824
+            doEvents()
+            app.activeViewport.refresh()
+
+
+        mqttBroker = '192.168.10.4'
         mqtt_client = mqtt.Client('MyCNC')
         topic = 'FWH/CNC/Machine_coordinates'
         
@@ -48,27 +79,6 @@ def run(context):
         Yslider = adsk.fusion.SliderJointMotion.cast(Yaxis.asBuiltJoints.itemByName("Yslider").jointMotion)
         Zslider = adsk.fusion.SliderJointMotion.cast(Zaxis.asBuiltJoints.itemByName("Zslider").jointMotion)
 
-
-        def on_message(client, userdata, msg):
-            x = msg.payload
-            update_sliders(x)
-
-
-        def on_connect(client, userdata, flags, rc):
-            if rc == 0:
-                ui.messageBox("Connected to MQTT Broker!", "Connected!")
-            else:
-                ui.messageBox(f"Failed to connect, return code {rc}", "Error\t")
-
-        def update_sliders(x):
-            coordinates = json.loads(x)
-            Xslider.slideValue = coordinates['X']
-            Yslider.slideValue = coordinates['Y']
-            Zslider.slideValue = coordinates['Z']
-            adsk.doEvents()
-            app.activeViewport.refresh()
-                
-           
         try:
             mqtt_client.connect(mqttBroker)
             mqtt_client.on_connect = on_connect
